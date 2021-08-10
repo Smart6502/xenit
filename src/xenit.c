@@ -41,18 +41,17 @@ int main()
 	if (!cwd) {puts(WRNSTR"No /etc/xenit, no services will be started."); goto noservices;}
 	DIR* tmpdir;
 	struct dirent* dir;
+	char* sname = NULL;
 
 	while ((dir = readdir(cwd)))
 	{
 		if (!(tmpdir = opendir(dir->d_name)))
 		{
-			if (dir->d_name[0] == '-')
-			{
-				printf(ERRSTR"Invalid service name: '%s'.\n", dir->d_name);
-				continue;
-			}
 			printf(INFSTR"Starting service '%s'...\n", dir->d_name);
-			char* args[3] = {"--", dir->d_name, NULL};
+			sname = realloc(sname, 12 + strlen(dir->d_name));
+			strcpy(sname, "/etc/xenit/");
+			strcat(sname, dir->d_name);
+			char* args[4] = {"bash", "--", sname, NULL};
 			pid_t pid = fork();
 			if (pid < 0)
 			{
