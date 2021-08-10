@@ -1,6 +1,8 @@
 #include <signal.h>
 #include <stdio.h>
+#include <linux/reboot.h>
 #include <sys/reboot.h>
+#include <sys/syscall.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <stdlib.h>
