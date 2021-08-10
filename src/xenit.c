@@ -14,6 +14,13 @@
 #define ERRSTR "\e[0m[ \e[31;1mERROR  \e[0m ]: "
 #define FTLSTR "\e[0m[ \e[31;1mFATAL  \e[0m ]: "
 
+void delay(int ms) {
+    struct timespec dts;
+    dts.tv_sec = ms / 1000;
+    dts.tv_nsec = (ms % 1000) * 1000000;
+    nanosleep(&dts, NULL);
+}
+
 int main()
 {
 	sigset_t set;
@@ -42,9 +49,9 @@ int main()
 				printf(ERRSTR"Invalid service name: '%s'.\n", dir->d_name);
 				continue;
 			}
-			printf(INFSTR"Starting service '%s'...", dir->d_name);
-			pid_t pid = fork();
+			printf(INFSTR"Starting service '%s'...\n", dir->d_name);
 			char* args[3] = {"bash", dir->d_name, NULL};
+			pid_t pid = fork();
 			if (pid < 0)
 			{
 				puts(FTLSTR"Internal error: fork() failed.");
@@ -53,7 +60,7 @@ int main()
 			{
 				execvp("/bin/bash", args);
 				puts(FTLSTR"Internal error: execvp() failed.");
-				exit(0);
+				exit(127);
 			}
 			else if (pid > 0)
 			{
@@ -62,11 +69,11 @@ int main()
 				status = (status >> 8) & 0xFF;
 				if (!status)
 				{
-					printf(AOKSTR"Service '%s' exited successfully.", dir->d_name);
+					printf(AOKSTR"Service '%s' exited successfully.\n", dir->d_name);
 				}
 				else
 				{
-					printf(ERRSTR"Service '%s' exited with code %d.", dir->d_name, status);
+					printf(ERRSTR"Service '%s' exited with code %d.\n", dir->d_name, status);
 				}
 			}
 		}
@@ -83,9 +90,9 @@ int main()
 	setsid();
 	setpgid(0, 0);
 
-	puts(INFSTR"Shutting down...\n");
+	puts(INFSTR"Shutting down...");
 
 	sync();
 	//reboot(LINUX_REBOOT_CMD_POWER_OFF);
-	while (1) {}
+	while (1) {delay(1000);}
 }
