@@ -52,7 +52,7 @@ int main()
 				continue;
 			}
 			printf(INFSTR"Starting service '%s'...\n", dir->d_name);
-			char* args[3] = {"bash", dir->d_name, NULL};
+			char* args[3] = {"--", dir->d_name, NULL};
 			pid_t pid = fork();
 			if (pid < 0)
 			{
