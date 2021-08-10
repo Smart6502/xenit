@@ -60,23 +60,34 @@ int main()
 			}
 			else if (pid == 0)
 			{
+				pid_t pid2 = fork();
+				if (pid2 < 0)
+				{
+					puts(FTLSTR"Internal error: fork() failed.");
+				}
+				else if (pid2 == 0)
+				{
+					execvp("/bin/bash", args);
+					puts(FTLSTR"Internal error: execvp() failed.");
+					exit(127);
+				}
+				else if (pid2 > 0)
+				{
+					int status;
+					while (wait(NULL) != pid2) {}
+					status = (status >> 8) & 0xFF;
+					if (!status)
+					{
+						printf(AOKSTR"Service '%s' exited successfully.\n", dir->d_name);
+					}
+					else
+					{
+						printf(ERRSTR"Service '%s' exited with code %d.\n", dir->d_name, status);
+					}
+				}
 				execvp("/bin/bash", args);
 				puts(FTLSTR"Internal error: execvp() failed.");
 				exit(127);
-			}
-			else if (pid > 0)
-			{
-				int status;
-				while (wait(NULL) != pid) {}
-				status = (status >> 8) & 0xFF;
-				if (!status)
-				{
-					printf(AOKSTR"Service '%s' exited successfully.\n", dir->d_name);
-				}
-				else
-				{
-					printf(ERRSTR"Service '%s' exited with code %d.\n", dir->d_name, status);
-				}
 			}
 		}
 		else
@@ -85,6 +96,8 @@ int main()
 		}
 	}
 
+	puts(INFSTR"Successfully started all services.");
+
 	noservices:
 
 	sigprocmask(SIG_UNBLOCK, &set, 0);
@@ -92,10 +105,11 @@ int main()
 	setsid();
 	setpgid(0, 0);
 
-	puts(INFSTR"Shutting down...");
-
-	sync();
+	//puts(INFSTR"Shutting down...");
+	//sync();
 	//reboot(LINUX_REBOOT_CMD_POWER_OFF);
+
+	puts(INFSTR"Halted.");
 	while (1) {delay(1000);}
 }
 
