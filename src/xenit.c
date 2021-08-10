@@ -84,6 +84,7 @@ int main()
 					{
 						printf(ERRSTR"Service '%s' exited with code %d.\n", dir->d_name, status);
 					}
+					exit(0);
 				}
 			}
 		}
