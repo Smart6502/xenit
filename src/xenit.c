@@ -6,18 +6,22 @@
 #include <stdlib.h>
 #include <dirent.h>
 
-#define AOKSTR "\e[0m[ \e[32mOK     \e[0m ]: "
-#define INFSTR "\e[0m[ \e[34mINFO   \e[0m ]: "
-#define WRNSTR "\e[0m[ \e[33mWARNING\e[0m ]: "
-#define ERRSTR "\e[0m[ \e[31mERROR  \e[0m ]: "
-#define FTLSTR "\e[0m[ \e[36mFATAL  \e[0m ]: "
+#define AOKSTR "\e[0m[ \e[32;1mOK     \e[0m ]: "
+#define INFSTR "\e[0m[ \e[34;1mINFO   \e[0m ]: "
+#define WRNSTR "\e[0m[ \e[33;1mWARNING\e[0m ]: "
+#define ERRSTR "\e[0m[ \e[31;1mERROR  \e[0m ]: "
+#define FTLSTR "\e[0m[ \e[31;1mFATAL  \e[0m ]: "
 
 int main()
 {
 	sigset_t set;
 	int status;
 
-	if (getpid() != 1) return 1;
+	if (getpid() != 1)
+	{
+		puts(ERRSTR"Xenit must be run as PID 1.");
+		return 1;
+	}
 
 	sigfillset(&set);
 	sigprocmask(SIG_BLOCK, &set, 0);
@@ -77,8 +81,8 @@ int main()
 	setsid();
 	setpgid(0, 0);
 
-	printf("xenit is starting...\n");
-	printf("Rebooting...\n");
+	puts(INFSTR"Shutting down...\n");
 
-	execvp("/usr/bin/bash", NULL);
+	sync();
+	reboot(LINUX_REBOOT_CMD_POWER_OFF);
 }
