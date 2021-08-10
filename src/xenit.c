@@ -9,6 +9,7 @@
 #include <dirent.h>
 #include <time.h>
 #include <sys/time.h>
+#include <string.h>
 
 #define AOKSTR "\e[0m[ \e[32;1mOK     \e[0m ]: "
 #define INFSTR "\e[0m[ \e[34;1mINFO   \e[0m ]: "
