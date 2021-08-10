@@ -85,9 +85,6 @@ int main()
 						printf(ERRSTR"Service '%s' exited with code %d.\n", dir->d_name, status);
 					}
 				}
-				execvp("/bin/bash", args);
-				puts(FTLSTR"Internal error: execvp() failed.");
-				exit(127);
 			}
 		}
 		else
