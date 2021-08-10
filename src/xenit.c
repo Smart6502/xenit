@@ -44,13 +44,13 @@ int main()
 			}
 			printf(INFSTR"Starting service '%s'...", dir->d_name);
 			pid_t pid = fork();
+			char* args[3] = {"bash", dir->d_name, NULL};
 			if (pid < 0)
 			{
 				puts(FTLSTR"Internal error: fork() failed.");
 			}
 			else if (pid == 0)
 			{
-				char* args[3] = {"bash", dir->d_name, NULL};
 				execvp("/bin/bash", args);
 				puts(FTLSTR"Internal error: execvp() failed.");
 				exit(0);
@@ -86,5 +86,6 @@ int main()
 	puts(INFSTR"Shutting down...\n");
 
 	sync();
-	reboot(LINUX_REBOOT_CMD_POWER_OFF);
+	//reboot(LINUX_REBOOT_CMD_POWER_OFF);
+	while (1) {}
 }
