@@ -7,6 +7,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <dirent.h>
+#include <time.h>
+#include <sys/time.h>
 
 #define AOKSTR "\e[0m[ \e[32;1mOK     \e[0m ]: "
 #define INFSTR "\e[0m[ \e[34;1mINFO   \e[0m ]: "
@@ -96,3 +98,4 @@ int main()
 	//reboot(LINUX_REBOOT_CMD_POWER_OFF);
 	while (1) {delay(1000);}
 }
+
