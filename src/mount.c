@@ -35,4 +35,6 @@ void mount_fss()
 	{
 		dlog(ok, "Mounted /dev");
 	}
+
+	// load from /etc/fstab
 }

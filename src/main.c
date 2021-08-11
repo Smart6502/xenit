@@ -36,9 +36,9 @@ int main()
 	setpgid(0, 0);
 
 	open_stds();
-
-	dlog(info, "memeic");
+	puts("xenit is starting...");
 
 	mount_fss();
+	
 	execvp(args[0], args);
 }
