@@ -1,11 +1,11 @@
+#include <fcntl.h>
 #include <signal.h>
 #include <stdio.h>
-#include <sys/reboot.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #include "common.h"
 
-char *args[] = { NULL,};
+char *args[] = { "/usr/bin/bash", NULL,};
 
 int main()
 {
@@ -22,9 +22,18 @@ int main()
 	sigprocmask(SIG_UNBLOCK, &set, 0);
 
 	setsid();
-	setpgid(0, 0);	
+	setpgid(0, 0);
+
+	int onefd = open("/dev/console", O_RDONLY, 0);
+	dup2(onefd, 0); // stdin
+	int twofd = open("/dev/console", O_RDWR, 0);
+	dup2(twofd, 1); // stdout
+	dup2(twofd, 2); // stderr
+
+	if (onefd > 2) close(onefd);
+	if (twofd > 2) close(twofd);
 
 	dlog(info, "memeic");
 
-	execvp("/usr/bin/bash", args);
+	execvp(args[0], args);
 }
