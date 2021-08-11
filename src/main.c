@@ -5,9 +5,7 @@
 #include <unistd.h>
 #include "common.h"
 
-char *args[] = {
-	NULL,
-};
+char *args[] = { NULL,};
 
 int main()
 {
@@ -26,7 +24,7 @@ int main()
 	setsid();
 	setpgid(0, 0);	
 
-	dlog(1, "memeic");
+	dlog(info, "memeic");
 
 	execvp("/usr/bin/bash", args);
 }

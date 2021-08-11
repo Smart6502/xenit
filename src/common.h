@@ -4,8 +4,10 @@
 
 enum dlog_status
 {
-	success,
 	fail,
+	fatal,
+	ok,
+	warn,
 	info,
 };
 
