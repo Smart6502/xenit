@@ -26,6 +26,9 @@ void delay(int ms) {
 
 int main()
 {
+	int (
+	puts(AOKSTR"Started Xenit.");
+
 	sigset_t set;
 	int status;
 
