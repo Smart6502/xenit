@@ -18,6 +18,7 @@
 #define FTLSTR "\e[0m[ \e[31;1mFATAL  \e[0m ]: "
 
 char* sname = NULL;
+sigset_t set;
 
 void startservice(char* name) {
 	printf(INFSTR"Starting service '%s'...\n", name);
@@ -39,8 +40,10 @@ void startservice(char* name) {
 		}
 		else if (pid2 == 0)
 		{
+			sigprocmask(SIG_UNBLOCK, &set, 0);
+			setsid();
 			execvp("/bin/bash", args);
-			puts(FTLSTR"Internal error: execvp() failed.");
+			printf(FTLSTR"Internal error: execvp(\"/bin/bash\", {\"%s\", \"%s\", \"%s\", \"%s\"}) failed.\n", args[0], args[1], args[2], args[3]);
 			exit(127);
 		}
 		else if (pid2 > 0)
@@ -73,8 +76,11 @@ int main()
 {
 	puts(AOKSTR"Started Xenit.");
 
-	sigset_t set;
-	int status;
+	if (chdir("/"))
+	{
+		puts(FTLSTR"Internal error: chdir(\"/\") failed.");
+		return 1;
+	}
 
 	if (getpid() != 1)
 	{
@@ -107,7 +113,6 @@ int main()
 	noservices:
 
 	sigprocmask(SIG_UNBLOCK, &set, 0);
-
 	setsid();
 	setpgid(0, 0);
 
