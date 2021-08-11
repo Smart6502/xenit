@@ -17,7 +17,8 @@
 #define ERRSTR "\e[0m[ \e[31;1mERROR  \e[0m ]: "
 #define FTLSTR "\e[0m[ \e[31;1mFATAL  \e[0m ]: "
 
-void delay(int ms) {
+void delay(int ms)
+{
     struct timespec dts;
     dts.tv_sec = ms / 1000;
     dts.tv_nsec = (ms % 1000) * 1000000;
@@ -26,7 +27,6 @@ void delay(int ms) {
 
 int main()
 {
-	int (
 	puts(AOKSTR"Started Xenit.");
 
 	sigset_t set;
