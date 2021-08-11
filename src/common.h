@@ -12,6 +12,6 @@ enum dlog_status
 };
 
 void dlog_sym(int level);
-#define dlog(level, msg, ...) dlog_sym(level); printf((msg), ##__VA_ARGS__)
+#define dlog(level, msg, ...) dlog_sym(level); printf((msg), ##__VA_ARGS__); putchar('\n');
 
 #endif
