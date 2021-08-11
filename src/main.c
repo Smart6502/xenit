@@ -3,6 +3,11 @@
 #include <sys/reboot.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include "common.h"
+
+char *args[] = {
+	NULL,
+};
 
 int main()
 {
@@ -19,10 +24,9 @@ int main()
 	sigprocmask(SIG_UNBLOCK, &set, 0);
 
 	setsid();
-	setpgid(0, 0);
+	setpgid(0, 0);	
 
-	printf("xenit is starting...\n");
-	printf("Rebooting...\n");
+	dlog(1, "memeic");
 
-	execvp("/usr/bin/bash", NULL);
+	execvp("/usr/bin/bash", args);
 }
