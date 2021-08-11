@@ -17,6 +17,50 @@
 #define ERRSTR "\e[0m[ \e[31;1mERROR  \e[0m ]: "
 #define FTLSTR "\e[0m[ \e[31;1mFATAL  \e[0m ]: "
 
+char* sname = NULL;
+
+void startservice(char* name) {
+	printf(INFSTR"Starting service '%s'...\n", name);
+	sname = realloc(sname, 12 + strlen(name));
+	strcpy(sname, "/etc/xenit/");
+	strcat(sname, name);
+	char* args[4] = {"bash", "--", sname, NULL};
+	pid_t pid = fork();
+	if (pid < 0)
+	{
+		puts(FTLSTR"Internal error: fork() failed.");
+	}
+	else if (pid == 0)
+	{
+		pid_t pid2 = fork();
+		if (pid2 < 0)
+		{
+			puts(FTLSTR"Internal error: fork() failed.");
+		}
+		else if (pid2 == 0)
+		{
+			execvp("/bin/bash", args);
+			puts(FTLSTR"Internal error: execvp() failed.");
+			exit(127);
+		}
+		else if (pid2 > 0)
+		{
+			int status;
+			while (wait(NULL) != pid2) {}
+			status = (status >> 8) & 0xFF;
+			if (!status)
+			{
+				printf(AOKSTR"Service '%s' exited successfully.\n", name);
+			}
+			else
+			{
+				printf(ERRSTR"Service '%s' exited with code %d.\n", name, status);
+			}
+			exit(0);
+		}
+	}
+}
+
 void delay(int ms)
 {
     struct timespec dts;
@@ -45,51 +89,12 @@ int main()
 	if (!cwd) {puts(WRNSTR"No /etc/xenit, no services will be started."); goto noservices;}
 	DIR* tmpdir;
 	struct dirent* dir;
-	char* sname = NULL;
 
 	while ((dir = readdir(cwd)))
 	{
 		if (!(tmpdir = opendir(dir->d_name)))
 		{
-			printf(INFSTR"Starting service '%s'...\n", dir->d_name);
-			sname = realloc(sname, 12 + strlen(dir->d_name));
-			strcpy(sname, "/etc/xenit/");
-			strcat(sname, dir->d_name);
-			char* args[4] = {"bash", "--", sname, NULL};
-			pid_t pid = fork();
-			if (pid < 0)
-			{
-				puts(FTLSTR"Internal error: fork() failed.");
-			}
-			else if (pid == 0)
-			{
-				pid_t pid2 = fork();
-				if (pid2 < 0)
-				{
-					puts(FTLSTR"Internal error: fork() failed.");
-				}
-				else if (pid2 == 0)
-				{
-					execvp("/bin/bash", args);
-					puts(FTLSTR"Internal error: execvp() failed.");
-					exit(127);
-				}
-				else if (pid2 > 0)
-				{
-					int status;
-					while (wait(NULL) != pid2) {}
-					status = (status >> 8) & 0xFF;
-					if (!status)
-					{
-						printf(AOKSTR"Service '%s' exited successfully.\n", dir->d_name);
-					}
-					else
-					{
-						printf(ERRSTR"Service '%s' exited with code %d.\n", dir->d_name, status);
-					}
-					exit(0);
-				}
-			}
+			startservice(dir->d_name);
 		}
 		else
 		{
