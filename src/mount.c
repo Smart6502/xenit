@@ -8,23 +8,33 @@ void mount_fss()
 
 	dlog(info, "Mounting /proc...");
 	if (!(mount("proc", "/proc", "procfs", prsflags, "")))
+	{
 		dlog(fail, "Mounting /proc failed");
+	}
 	else
+	{
 		dlog(ok, "Mounted /proc");
-
+	}
 
 	dlog(info, "Mounting /sys...");
 	if (!(mount("sys", "/sys", "sysfs", prsflags, "")))
+	{
 		dlog(fail, "Mounting /sys failed!");
+	}
 	else
+	{
 		dlog(ok, "Mounted /sys");
-
+	}
 
 	uint64_t runflags = MS_SYNC | MS_NOSUID;
 
 	dlog(info, "Mounting /run...");
 	if (!(mount("run", "/run", "tmpfs", runflags, "mode=0755")))
+	{
 		dlog(fail, "Mounting /run failed");
+	}
 	else
+	{
 		dlog(ok, "Mounted /run");
+	}
 }
