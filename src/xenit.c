@@ -45,7 +45,7 @@ void startservice(char* name) {
 		}
 		else if (pid2 > 0)
 		{
-			int status;
+			int status = 0;
 			while (wait(NULL) != pid2) {}
 			status = (status >> 8) & 0xFF;
 			if (!status)
