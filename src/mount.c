@@ -26,15 +26,13 @@ void mount_fss()
 		dlog(ok, "Mounted /sys");
 	}
 
-	uint64_t runflags = MS_SYNC | MS_NOSUID;
-
-	dlog(info, "Mounting /run...");
-	if (!(mount("run", "/run", "tmpfs", runflags, "mode=0755")))
+	dlog(info, "Mounting /dev...");
+	if (!(mount("dev", "/dev", "devtmpfs", MS_NOSUID, "mode=0755")))
 	{
-		dlog(fail, "Mounting /run failed");
+		dlog(fail, "Mounting /dev failed");
 	}
 	else
 	{
-		dlog(ok, "Mounted /run");
+		dlog(ok, "Mounted /dev");
 	}
 }
