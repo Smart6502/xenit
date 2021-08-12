@@ -3,50 +3,32 @@
 #include <stdbool.h>
 #include "common.h"
 
-void shiftstrdown(char* line, int32_t chars) {
-	int32_t iptr;
-	for (iptr = 0; line[chars]; ++chars, ++iptr) {
-		line[iptr] = line[chars];
+int dmount(char *s, char *t, char *f, unsigned long m, void *d) {
+	dlog(info, "Mounting %s...", t);
+	int ret;
+	if ((ret = mount(s, t, f, m, d)))
+	{
+		dlog(ok, "Mounted %s.", t);
 	}
-	line[iptr] = 0;
+	else
+	{
+		dlog(fail, "Mounting %s failed.", t);
+	}
+	return ret;
 }
 
 void mount_fss()
 {
 	uint64_t prsflags = MS_SYNCHRONOUS | MS_NOSUID | MS_NOEXEC;
 
-	dlog(info, "Mounting /proc...");
-	if (mount("proc", "/proc", "procfs", prsflags, ""))
-	{
-		dlog(ok, "Mounted /proc.");
-	}
-	else
-	{
-		dlog(fail, "Mounting /proc failed.");
-	}
-
-	dlog(info, "Mounting /sys...");
-	if (mount("sys", "/sys", "sysfs", prsflags, ""))
-	{
-		dlog(ok, "Mounted /sys.");
-	}
-	else
-	{
-		dlog(fail, "Mounting /sys failed.");
-	}
-
-	dlog(info, "Mounting /dev...");
-	if (mount("dev", "/dev", "devtmpfs", MS_NOSUID, "mode=0755"))
-	{
-		dlog(ok, "Mounted /dev.");
-	}
-	else
-	{
-		dlog(fail, "Mounting /dev failed.");
-	}
+	dmount("proc", "/proc", "procfs", prsflags, "");
+	dmount("sys", "/sys", "sysfs", prsflags, "");
+	dmount("dev", "/dev", "devtmpfs", MS_NOSUID, "mode=0755");
+	dmount("tmp", "/tmp", "tmpfs", MS_SYNCHRONOUS, "");
+	dmount("shm", "/dev/shm", "tmpfs", MS_SYNCHRONOUS, "");
 
 	dlog(info, "Mounting fstab entries...");
-	run("mount", "-a", NULL);
+	run("mount", "-av", NULL);
 
 	run("df", NULL);
 }
