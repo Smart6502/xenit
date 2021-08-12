@@ -8,11 +8,11 @@ int dmount(char *s, char *t, char *f, unsigned long m, void *d) {
 	int ret;
 	if ((ret = mount(s, t, f, m, d)))
 	{
-		dlog(ok, "Mounted %s.", t);
+		dlog(fail, "Mounting %s failed, errno %d (%s).", t, errno, strerror(errno));
 	}
 	else
 	{
-		dlog(fail, "Mounting %s failed.", t);
+		dlog(ok, "Mounted %s.", t);
 	}
 	return ret;
 }
