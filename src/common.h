@@ -14,7 +14,6 @@ enum dlog_status
 	fatal,
 };
 
-
 void mount_fss();
 void dlog_sym(int);
 int run(char*, ...);

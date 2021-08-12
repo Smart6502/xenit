@@ -1,6 +1,15 @@
 #include <stdint.h>
 #include <sys/mount.h>
+#include <stdbool.h>
 #include "common.h"
+
+void shiftstrdown(char* line, int32_t chars) {
+	int32_t iptr;
+	for (iptr = 0; line[chars]; ++chars, ++iptr) {
+		line[iptr] = line[chars];
+	}
+	line[iptr] = 0;
+}
 
 void mount_fss()
 {
@@ -35,4 +44,9 @@ void mount_fss()
 	{
 		dlog(fail, "Mounting /dev failed.");
 	}
+
+	dlog(info, "Mounting fstab entries...");
+	run("mount", "-a", NULL);
+
+	run("df", NULL);
 }
