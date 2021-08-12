@@ -24,8 +24,8 @@ void mount_fss()
 	dmount("proc", "/proc", "procfs", prsflags, "");
 	dmount("sys", "/sys", "sysfs", prsflags, "");
 	dmount("dev", "/dev", "devtmpfs", MS_NOSUID, "mode=0755");
-	dmount("tmp", "/tmp", "none", MS_SYNCHRONOUS, "size=512M");
-	dmount("shm", "/dev/shm", "tmpfs", MS_SYNCHRONOUS, "size=512M");
+	dmount("", "/tmp", "none", MS_SYNCHRONOUS, "size=512M");
+	dmount("", "/dev/shm", "tmpfs", MS_SYNCHRONOUS, "size=512M");
 
 	dlog(info, "Mounting fstab entries...");
 	run("mount", "-av", NULL);

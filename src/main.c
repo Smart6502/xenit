@@ -20,6 +20,8 @@ void open_stds()
 int main()
 {
 	dlog(info, "Xenit is starting...");
+	
+	chdir("/");
 
 	if (getpid() != 1)
 	{
