@@ -1,10 +1,9 @@
 #include <fcntl.h>
 #include <signal.h>
-#include <sys/wait.h>
 #include <unistd.h>
 #include "common.h"
 
-char *args[] = { "/usr/bin/bash", NULL,};
+sigset_t set;
 
 void open_stds()
 {
@@ -13,32 +12,27 @@ void open_stds()
 	int tfd = open("/dev/console", O_RDWR, 0);
 	dup2(tfd, STDOUT_FILENO);
 	dup2(tfd, STDERR_FILENO);
-	
+
 	if (ofd > 2) close(ofd);
 	if (tfd > 2) close(tfd);
 }
 
 int main()
 {
-	sigset_t set;
-	int status;
+	dlog(info, "Xenit is starting...");
 
-	if (getpid() != 1) return 1;
+	if (getpid() != 1)
+	{
+		dlog(fatal, "Xenit must be run as pid 1.");
+		return 1;
+	}
 
 	sigfillset(&set);
 	sigprocmask(SIG_BLOCK, &set, 0);
 
-	if (fork()) for (;;) wait(&status);
-
-	sigprocmask(SIG_UNBLOCK, &set, 0);
-
-	setsid();
-	setpgid(0, 0);
-
 	open_stds();
-	puts("xenit is starting...");
-
 	mount_fss();
-	
-	execvp(args[0], args);
+
+	dlog(info, "Xenit halted.");
+	while (1) {delay(1000);}
 }

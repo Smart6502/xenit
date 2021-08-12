@@ -7,32 +7,32 @@ void mount_fss()
 	uint64_t prsflags = MS_SYNCHRONOUS | MS_NOSUID | MS_NOEXEC;
 
 	dlog(info, "Mounting /proc...");
-	if (!(mount("proc", "/proc", "procfs", prsflags, "")))
+	if (mount("proc", "/proc", "procfs", prsflags, ""))
 	{
-		dlog(fail, "Mounting /proc failed");
+		dlog(ok, "Mounted /proc.");
 	}
 	else
 	{
-		dlog(ok, "Mounted /proc");
+		dlog(fail, "Mounting /proc failed.");
 	}
 
 	dlog(info, "Mounting /sys...");
-	if (!(mount("sys", "/sys", "sysfs", prsflags, "")))
+	if (mount("sys", "/sys", "sysfs", prsflags, ""))
 	{
-		dlog(fail, "Mounting /sys failed!");
+		dlog(ok, "Mounted /sys.");
 	}
 	else
 	{
-		dlog(ok, "Mounted /sys");
+		dlog(fail, "Mounting /sys failed.");
 	}
 
 	dlog(info, "Mounting /dev...");
-	if (!(mount("dev", "/dev", "devtmpfs", MS_NOSUID, "mode=0755")))
+	if (mount("dev", "/dev", "devtmpfs", MS_NOSUID, "mode=0755"))
 	{
-		dlog(fail, "Mounting /dev failed");
+		dlog(ok, "Mounted /dev.");
 	}
 	else
 	{
-		dlog(ok, "Mounted /dev");
+		dlog(fail, "Mounting /dev failed.");
 	}
 }
