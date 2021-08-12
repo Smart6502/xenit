@@ -26,9 +26,9 @@ void mount_fss()
 	mkdir("/proc", S_IFDIR);
 	dmount("/proc", "/proc", "proc", prsflags, "");
 	mkdir("/tmp", S_IFDIR);
-	dmount("/tmp", "/tmp", "tmpfs", MS_SYNCHRONOUS, "");
+	dmount("none", "/tmp", "tmpfs", MS_SYNCHRONOUS, "");
 	mkdir("/dev/shm", S_IFDIR);
-	dmount("", "/dev/shm", "tmpfs", MS_SYNCHRONOUS, "");
+	dmount("tmpfs", "/dev/shm", "tmpfs", MS_SYNCHRONOUS, "");
 
 	dlog(info, "Mounting fstab entries...");
 	run("mount", "-av", NULL);
