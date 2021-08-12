@@ -35,11 +35,12 @@ int main()
 	open_stds();
 	mount_fss();
 
-    dlogn(info, "Press ENTER to continue...");
-    while (getchar() != '\n') {delay(5);}
+	dlogn(info, "Press enter to continue...");
+	while (getchar() != '\n') delay(5);
 
-    run("agetty", "tty1", NULL);
+	run("agetty", "tty1", NULL);
 
 	dlog(info, "Xenit halted.");
-	while (1) {delay(1000);}
+	
+	while (1) delay(1000);
 }

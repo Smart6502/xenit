@@ -5,9 +5,11 @@
 #include <sys/stat.h>
 #include "common.h"
 
-int dmount(char *s, char *t, char *f, unsigned long m, void *d) {
+int dmount(char *s, char *t, char *f, unsigned long m, void *d)
+{
 	dlog(info, "Mounting %s...", t);
 	int ret;
+	
 	if ((ret = mount(s, t, f, m, d)))
 	{
 		dlog(fail, "Mounting %s failed, errno %d (%s).", t, errno, strerror(errno));
@@ -16,6 +18,7 @@ int dmount(char *s, char *t, char *f, unsigned long m, void *d) {
 	{
 		dlog(ok, "Mounted %s.", t);
 	}
+	
 	return ret;
 }
 
@@ -25,8 +28,10 @@ void mount_fss()
 
 	mkdir("/proc", S_IFDIR);
 	dmount("/proc", "/proc", "proc", prsflags, "");
+	
 	mkdir("/tmp", S_IFDIR);
 	dmount("none", "/tmp", "tmpfs", MS_SYNCHRONOUS, "");
+	
 	mkdir("/dev/shm", S_IFDIR);
 	dmount("tmpfs", "/dev/shm", "tmpfs", MS_SYNCHRONOUS, "");
 
