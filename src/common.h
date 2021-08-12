@@ -22,6 +22,7 @@ void delay(int);
 extern sigset_t set;
 
 #define dlog(level, msg, ...) dlog_sym(level); printf((msg), ##__VA_ARGS__); putchar('\n')
+#define dlogn(level, msg, ...) dlog_sym(level); printf((msg), ##__VA_ARGS__); fflush(stdout)
 #define fatalfunc(fname, rcode) dlog(fatal, "%s() failed with error %ld, errno %d (%s).", name, (long int)rcode, errno, strerror(errno))
 
 #endif
