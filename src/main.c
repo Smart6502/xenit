@@ -33,6 +33,8 @@ int main()
 	open_stds();
 	mount_fss();
 
+    run("agetty", "tty1", NULL);
+
 	dlog(info, "Xenit halted.");
 	while (1) {delay(1000);}
 }
