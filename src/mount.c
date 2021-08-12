@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include <sys/mount.h>
 #include <stdbool.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 #include "common.h"
 
 int dmount(char *s, char *t, char *f, unsigned long m, void *d) {
@@ -21,11 +23,12 @@ void mount_fss()
 {
 	uint64_t prsflags = MS_SYNCHRONOUS | MS_NOSUID | MS_NOEXEC;
 
-	dmount("proc", "/proc", "procfs", prsflags, "");
-	dmount("sys", "/sys", "sysfs", prsflags, "");
-	dmount("dev", "/dev", "devtmpfs", MS_NOSUID, "mode=0755");
-	dmount("", "/tmp", "none", MS_SYNCHRONOUS, "size=512M");
-	dmount("", "/dev/shm", "tmpfs", MS_SYNCHRONOUS, "size=512M");
+	mkdir("/proc", S_IFDIR);
+	dmount("/proc", "/proc", "proc", prsflags, "");
+	mkdir("/tmp", S_IFDIR);
+	dmount("/tmp", "/tmp", "tmpfs", MS_SYNCHRONOUS, "");
+	mkdir("/dev/shm", S_IFDIR);
+	dmount("", "/dev/shm", "tmpfs", MS_SYNCHRONOUS, "");
 
 	dlog(info, "Mounting fstab entries...");
 	run("mount", "-av", NULL);
