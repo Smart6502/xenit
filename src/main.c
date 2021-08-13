@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include "common.h"
 
-static sigset_t set;
+sigset_t set;
 
 void open_stds()
 {
@@ -37,7 +37,7 @@ int main()
 
 	if (getpid() != 1)
 	{
-		dlog(fatal, "Xenit must be run as pid 1.");
+		dlog(fatal, "Xenit must be run as PID 1.");
 		return 1;
 	}
 
@@ -46,7 +46,6 @@ int main()
 
 	open_stds();
 	mount_fss();
-	setup_signals();
 
 	dlogn(info, "Press enter to continue...");
 	while (getchar() != '\n') delay(5);
