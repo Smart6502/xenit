@@ -18,6 +18,7 @@ void mount_fss();
 void dlog_sym(int);
 int run(char*, ...);
 void delay(int);
+void setup_signals();
 
 extern sigset_t set;
 

@@ -34,6 +34,7 @@ int main()
 
 	open_stds();
 	mount_fss();
+	setup_signals();
 
 	dlogn(info, "Press enter to continue...");
 	while (getchar() != '\n') delay(5);

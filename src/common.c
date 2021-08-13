@@ -12,11 +12,12 @@ int run(char* name, ...)
 	va_list vargs;
 	va_start(vargs, name);
 	args[0] = name;
-	for (int i = 1; (args[i] = va_arg(vargs, char*));) {
-	    args = realloc(args, (++i + 1) * sizeof(char*));
-    }
+	for (int i = 1; (args[i] = va_arg(vargs, char*));)
+		args = realloc(args, (++i + 1) * sizeof(char*));
+
 	va_end(vargs);
 	pid_t pid = fork();
+	
 	if (pid < 0)
 	{
 		fatalfunc("fork", pid);
@@ -24,7 +25,6 @@ int run(char* name, ...)
 	else if (pid == 0)
 	{
 		sigprocmask(SIG_UNBLOCK, &set, 0);
-		dlog(info, "Executing %s...", args[0]);
 		int r = execvp(args[0], args);
 		fatalfunc("execvp", r);
 		exit(127);
@@ -41,11 +41,8 @@ int run(char* name, ...)
 		{
 			dlog(fail, "%s exited with code %d.", args[0], status);
 		}
-		else
-		{
-			dlog(ok, "%s exited successfully.", args[0]);
-		}
 	}
+
 	free(args);
 	return status;
 }
