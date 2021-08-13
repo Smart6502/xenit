@@ -3,6 +3,8 @@
 #include <unistd.h>
 #include "common.h"
 
+#define LEN(x) (sizeof(x) / sizeof *(x))
+
 sigset_t set;
 
 void open_stds()
@@ -17,29 +19,20 @@ void open_stds()
 	if (tfd > 2) close(tfd);
 }
 
-void ttys_init()
-{
-	char ttyn[4] = "ttyn";
-
-	for (int t = 1; t < 7; t++)
-	{
-		ttyn[3] = 48 + t;
-
-		run("agetty", ttyn, NULL);
-	}
-}
-
 int main()
 {
+	int sig;
+	size_t i;
+
 	dlog(info, "Xenit is starting...");
 	
-	chdir("/");
-
 	if (getpid() != 1)
 	{
 		dlog(fatal, "Xenit must be run as PID 1.");
 		return 1;
 	}
+
+	chdir("/");
 
 	sigfillset(&set);
 	sigprocmask(SIG_BLOCK, &set, 0);
@@ -47,12 +40,18 @@ int main()
 	open_stds();
 	mount_fss();
 
-	dlogn(info, "Press enter to continue...");
-	while (getchar() != '\n') delay(5);
+	while (1)
+	{
+		alarm(TIMEO);
+		sigwait(&set, &sig);
 
-	ttys_init();
+		for (i = 0; i < LEN(sigmap); i++)
+			if (sigmap[i].sig == sig)
+			{
+				sigmap[i].handler();
+				break;	
+			}
+	}
 
-	dlog(info, "Xenit halted.");
-	
-	while (1) delay(1000);
+	return 0;
 }
