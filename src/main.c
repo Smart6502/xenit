@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include "common.h"
 
-sigset_t set;
+static sigset_t set;
 
 void open_stds()
 {
@@ -15,6 +15,18 @@ void open_stds()
 
 	if (ofd > 2) close(ofd);
 	if (tfd > 2) close(tfd);
+}
+
+void ttys_init()
+{
+	char ttyn[4] = "ttyn";
+
+	for (int t = 1; t < 7; t++)
+	{
+		ttyn[3] = 48 + t;
+
+		run("agetty", ttyn, NULL);
+	}
 }
 
 int main()
@@ -39,7 +51,7 @@ int main()
 	dlogn(info, "Press enter to continue...");
 	while (getchar() != '\n') delay(5);
 
-	run("agetty", "tty1", NULL);
+	ttys_init();
 
 	dlog(info, "Xenit halted.");
 	
