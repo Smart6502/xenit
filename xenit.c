@@ -15,6 +15,8 @@ static void sigreap(void);
 static void sigreboot(void);
 static void spawn(char *const []);
 
+static char *const getty[] = { "/sbin/agetty", "tty1", NULL };
+
 static struct
 {
 	int sig;
@@ -39,7 +41,8 @@ int main(void)
 	chdir("/");
 	sigfillset(&set);
 	sigprocmask(SIG_BLOCK, &set, NULL);
-	
+	spawn(getty);
+
 	while (1)
 	{
 		alarm(TIMEO);
