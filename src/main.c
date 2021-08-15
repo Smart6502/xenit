@@ -23,6 +23,8 @@ int main(void)
 	
 	open_stds();
 
+	spawn((char *const[]){ "mount", "-av", NULL });
+
 	sleep(3);
 
 	spawn(getty);

@@ -27,9 +27,11 @@ void spawn(char *const argv[])
 			setsid();
 			execvp(argv[0], argv);
 			perror("execvp");
+			dlog(fail, "execvp failed to execute %s", argv[0]);
 			_exit(1);
 		case -1:
 			perror("fork");
+			dlog(fail, "fork failed");
 	}
 }
 
