@@ -4,6 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "signals.h"
+#include "util.h"
 
 void open_stds()
 {
@@ -32,7 +33,25 @@ void spawn(char *const argv[])
 	}
 }
 
-void dlog(const char *fmt, ...)
+char *dlog_type(int level)
+{
+	switch (level)
+	{
+		case ok:
+			return "ok:";
+
+		case fail:
+			return "fail:";
+
+		case info:
+			return "";
+
+		case warn:
+			return "warning:";
+	}
+}
+
+void dlog(int level, const char *fmt, ...)
 {
 	char buffer[1000];
 	memset(buffer, 0, sizeof(buffer));
@@ -42,5 +61,5 @@ void dlog(const char *fmt, ...)
 	vsprintf(buffer, fmt, args);
 	va_end(args);
 
-	printf("xenit: %s\n", buffer);
+	printf("xenit: %s %s\n", dlog_type(level), buffer);
 }

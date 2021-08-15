@@ -12,7 +12,7 @@ int main(void)
 
 	if (getpid() != 1)
 	{
-		dlog("Not running as PID 1");
+		dlog(fail, "Not running as PID 1");
 
 		return 1;
 	}
@@ -22,7 +22,6 @@ int main(void)
 	sigprocmask(SIG_BLOCK, &set, NULL);
 	
 	open_stds();
-	dlog("this shit works %d", sig);
 
 	sleep(3);
 
