@@ -4,8 +4,6 @@
 #include "signals.h"
 #include "util.h"
 
-#define LEN(x)	(sizeof (x) / sizeof *(x))
-
 char *const getty[] = { "/sbin/agetty", "tty1", NULL };
 
 int main(void)
@@ -13,13 +11,20 @@ int main(void)
 	int sig;
 
 	if (getpid() != 1)
+	{
+		dlog("Not running as PID 1");
+
 		return 1;
+	}
 	
 	chdir("/");
 	sigfillset(&set);
 	sigprocmask(SIG_BLOCK, &set, NULL);
 	
 	open_stds();
+	dlog("this shit works %d", sig);
+
+	sleep(3);
 
 	spawn(getty);
 

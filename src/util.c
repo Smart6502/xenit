@@ -1,5 +1,7 @@
 #include <fcntl.h>
+#include <stdarg.h>
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 #include "signals.h"
 
@@ -28,4 +30,17 @@ void spawn(char *const argv[])
 		case -1:
 			perror("fork");
 	}
+}
+
+void dlog(const char *fmt, ...)
+{
+	char buffer[1000];
+	memset(buffer, 0, sizeof(buffer));
+	
+	va_list args;
+	va_start(args, fmt);
+	vsprintf(buffer, fmt, args);
+	va_end(args);
+
+	printf("xenit: %s\n", buffer);
 }
