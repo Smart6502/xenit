@@ -1,8 +1,8 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "common.h"
 #include "signals.h"
+#include "util.h"
 
 #define LEN(x)	(sizeof (x) / sizeof *(x))
 
