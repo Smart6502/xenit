@@ -66,6 +66,8 @@ static void sigpoweroff(void)
 
 static void sigreap(void)
 {
+	printf("reap\n");
+
 	while (waitpid(-1, NULL, WNOHANG) > 0)
 		;
 	alarm(TIMEO);
