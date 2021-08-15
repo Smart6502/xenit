@@ -18,13 +18,16 @@ int main(void)
 	chdir("/");
 	sigfillset(&set);
 	sigprocmask(SIG_BLOCK, &set, NULL);
+	
+	open_stds();
+
 	spawn(getty);
 
 	while (1)
 	{
 		alarm(TIMEO);
 		sigwait(&set, &sig);
-		for (size_t i = 0; i < LEN(sigmap); i++)
+		for (size_t i = 0; i < 4; i++)
 			if (sigmap[i].sig == sig)
 			{
 				sigmap[i].handler();
