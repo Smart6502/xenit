@@ -8,18 +8,6 @@
 #include "handler.h"
 #include "util.h"
 
-void open_stds()
-{
-	int ofd = open("/dev/console", O_RDONLY, 0);
-	dup2(ofd, STDIN_FILENO);
-	int tfd = open("/dev/console", O_RDWR, 0);
-	dup2(tfd, STDOUT_FILENO);
-	dup2(tfd, STDERR_FILENO);
-
-	if (ofd > 2) close(ofd);
-	if (tfd > 2) close(tfd);
-}
-
 char *read_file_content(char *file, char *ptr, int len)
 {
 	int fd = open(file, O_RDONLY);
@@ -42,22 +30,45 @@ char *read_file_content(char *file, char *ptr, int len)
 	return buffer;
 }
 
+void open_stds()
+{
+	int ofd = open("/dev/console", O_RDONLY, 0);
+	dup2(ofd, STDIN_FILENO);
+	int tfd = open("/dev/console", O_RDWR, 0);
+	dup2(tfd, STDOUT_FILENO);
+	dup2(tfd, STDERR_FILENO);
 
-void spawn(char *const argv[])
+	if (ofd > 2) close(ofd);
+	if (tfd > 2) close(tfd);
+}
+
+int spawn(char *const argv[])
 {
 	switch (fork())
 	{
 		case 0:
 			sigprocmask(SIG_UNBLOCK, &set, NULL);
 			setsid();
-			execvp(argv[0], argv);
+			int status = execvp(argv[0], argv);
 			perror("execvp");
 			dlog(fail, "execvp failed to execute %s", argv[0]);
 			_exit(1);
+
+			return status;
+
 		case -1:
 			perror("fork");
 			dlog(fail, "fork failed");
+			return 1;
 	}
+}
+
+void safe_spawn(char *const argv[])
+{
+	int status = spawn(argv);
+
+	if (status)
+		dlog(fail, "%s returned exit code", argv[0], status);
 }
 
 char *dlog_type(int level)
@@ -71,7 +82,7 @@ char *dlog_type(int level)
 			return "\e[91mfail\e[0m:";
 
 		case info:
-			return "";
+			return "\e[94minfo\e[0m";
 
 		case warn:
 			return "\e[93mwarning\e[0m:";

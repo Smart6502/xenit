@@ -10,7 +10,8 @@ enum dlog_levels
 };
 
 void open_stds();
-void spawn(char *const []);
+int spawn(char *const []);
+void safe_spawn(char *const[]);
 void dlog(int, const char *, ...);
 
 #endif
