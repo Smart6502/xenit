@@ -2,8 +2,10 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <sys/stat.h>
 #include <unistd.h>
-#include "signals.h"
+#include "handler.h"
 #include "util.h"
 
 void open_stds()
@@ -17,6 +19,29 @@ void open_stds()
 	if (ofd > 2) close(ofd);
 	if (tfd > 2) close(tfd);
 }
+
+char *read_file_content(char *file, char *ptr, int len)
+{
+	int fd = open(file, O_RDONLY);
+
+	struct stat st = {0};
+	fstat(fd, &st);
+
+	char *buffer = malloc(st.st_size * sizeof(char));
+
+	if (ptr == NULL)
+		read(fd, buffer, st.st_size);
+	else
+	{
+		read(fd, ptr, len);
+		buffer = ptr;
+	}
+
+	close(fd);
+
+	return buffer;
+}
+
 
 void spawn(char *const argv[])
 {
@@ -40,23 +65,22 @@ char *dlog_type(int level)
 	switch (level)
 	{
 		case ok:
-			return "ok:";
+			return "\e[92mok\e[0m:";
 
 		case fail:
-			return "fail:";
+			return "\e[91mfail\e[0m:";
 
 		case info:
 			return "";
 
 		case warn:
-			return "warning:";
+			return "\e[93mwarning\e[0m:";
 	}
 }
 
 void dlog(int level, const char *fmt, ...)
 {
-	char buffer[1000];
-	memset(buffer, 0, sizeof(buffer));
+	char buffer[1000] = {0};
 	
 	va_list args;
 	va_start(args, fmt);

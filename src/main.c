@@ -1,10 +1,10 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "signals.h"
+#include "handler.h"
 #include "util.h"
 
-char *const getty[] = { "/sbin/agetty", "tty1", NULL };
+char *const getty[] = { "/sbin/agetty", "--noclear", "tty1", NULL };
 
 int main(void)
 {
@@ -16,16 +16,16 @@ int main(void)
 
 		return 1;
 	}
-	
+
 	chdir("/");
 	sigfillset(&set);
 	sigprocmask(SIG_BLOCK, &set, NULL);
 	
 	open_stds();
 
-	spawn((char *const[]){ "mount", "-av", NULL });
+	dlog(info, "xenit is starting");
 
-	sleep(3);
+	spawn((char *const[]){ "mount", "-av", NULL });
 
 	spawn(getty);
 

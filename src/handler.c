@@ -2,7 +2,7 @@
 #include <sys/reboot.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include "signals.h"
+#include "handler.h"
 
 sigset_t set;
 signal_map sigmap[4] = {
