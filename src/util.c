@@ -68,7 +68,7 @@ void safe_spawn(char *const argv[])
 	int status = spawn(argv);
 
 	if (status)
-		dlog(fail, "%s returned exit code", argv[0], status);
+		dlog(fail, "%s returned exit code %d", argv[0], status);
 }
 
 char *dlog_type(int level)
