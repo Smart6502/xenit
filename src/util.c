@@ -1,4 +1,5 @@
 #include <fcntl.h>
+#include <limits.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
@@ -8,8 +9,10 @@
 #include "handler.h"
 #include "util.h"
 
-char *read_file_content(int fd, char *ptr, int len)
+char *read_file_content(char *file, char *ptr, int len)
 {
+	int fd = open(file, O_RDONLY);
+
 	struct stat st = {0};
 	fstat(fd, &st);
 
@@ -38,6 +41,23 @@ void open_stds()
 	if (tfd > 2) close(tfd);
 }
 
+void set_hostname()
+{
+	char hostname[HOST_NAME_MAX] = {0};
+	read_file_content("/etc/hostname", hostname, HOST_NAME_MAX);
+
+	int fd = open("/proc/sys/kernel/hostname", O_WRONLY | O_CREAT, 0644);
+
+	if (fd == -1)
+	{
+		dlog(fail, "Failed to read hostname");
+		return;
+	}
+
+	dlog(info, "setting hostname %s", hostname);
+	write(fd, hostname, strlen(hostname));
+}
+
 void spawn(char *const argv[])
 {
 	switch (fork())
@@ -53,29 +73,6 @@ void spawn(char *const argv[])
 			perror("fork");
 			dlog(fail, "fork failed");
 	}
-}
-
-void set_hostname()
-{
-	int hnfd = open("/etc/hostname", O_RDONLY);
-	
-	struct stat st = {0};
-	fstat(hnfd, &st);
-
-	char *hostname = malloc(st.st_size * sizeof(char));
-
-	read_file_content(hnfd, hostname, st.st_size);
-
-	close(hnfd);
-
-	dlog(info, "setting hostname %s", hostname);
-
-	if (sethostname(hostname, st.st_size))
-		dlog(fail, "could not set hostname");
-	else
-		dlog(ok, "set hostname");
-
-	free(hostname);
 }
 
 char *dlog_type(int level)
