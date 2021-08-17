@@ -42,33 +42,21 @@ void open_stds()
 	if (tfd > 2) close(tfd);
 }
 
-int spawn(char *const argv[])
+void spawn(char *const argv[])
 {
 	switch (fork())
 	{
 		case 0:
 			sigprocmask(SIG_UNBLOCK, &set, NULL);
 			setsid();
-			int status = execvp(argv[0], argv);
+			execvp(argv[0], argv);
 			perror("execvp");
-			dlog(fail, "execvp failed to execute %s", argv[0]);
 			_exit(1);
-
-			return status;
 
 		case -1:
 			perror("fork");
 			dlog(fail, "fork failed");
-			return 1;
 	}
-}
-
-void safe_spawn(char *const argv[])
-{
-	int status = spawn(argv);
-
-	if (status)
-		dlog(fail, "%s returned exit code %d", argv[0], status);
 }
 
 char *dlog_type(int level)

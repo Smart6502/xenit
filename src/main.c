@@ -29,11 +29,11 @@ int main(void)
 
 	dlog(info, "mounting fstab");
 	
-	safe_spawn(mountcmd);
+	spawn(mountcmd);
 
-	dlog(info, "creating agetty process");
+	dlog(info, "starting agetty");
 	
-	safe_spawn(getty);
+	spawn(getty);
 
 	while (1)
 	{
