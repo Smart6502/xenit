@@ -64,7 +64,7 @@ char *dlog_type(int level)
 	switch (level)
 	{
 		case ok:
-			return "\e[92mok\e[0m:";
+			return "\e[92m ok \e[0m:";
 
 		case fail:
 			return "\e[91mfail\e[0m:";
@@ -73,7 +73,7 @@ char *dlog_type(int level)
 			return "\e[94minfo\e[0m:";
 
 		case warn:
-			return "\e[93mwarning\e[0m:";
+			return "\e[93mwarn\e[0m:";
 	}
 }
 
