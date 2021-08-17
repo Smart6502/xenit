@@ -70,7 +70,7 @@ char *dlog_type(int level)
 			return "\e[91mfail\e[0m:";
 
 		case info:
-			return "\e[94minfo\e[0m";
+			return "\e[94minfo\e[0m:";
 
 		case warn:
 			return "\e[93mwarning\e[0m:";

@@ -13,4 +13,6 @@ void open_stds();
 void spawn(char *const []);
 void dlog(int, const char *, ...);
 
+void mount_tfs();
+
 #endif

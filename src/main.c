@@ -27,6 +27,8 @@ int main(void)
 
 	dlog(info, "xenit is starting");
 
+	mount_tfs();
+
 	dlog(info, "mounting fstab");
 	
 	spawn(mountcmd);
