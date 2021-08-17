@@ -9,6 +9,7 @@ enum dlog_levels
 	warn,
 };
 
+char *read_file_content(char *file, char *ptr, int len);
 void open_stds();
 void spawn(char *const []);
 void dlog(int, const char *, ...);

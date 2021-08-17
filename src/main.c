@@ -1,3 +1,4 @@
+#include <limits.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -6,6 +7,13 @@
 
 char *const mountcmd[] = { "mount", "-av", NULL };
 char *const getty[] = { "/sbin/agetty", "--noclear", "tty1", NULL };
+
+void set_hostname()
+{
+	char hostname[HOST_NAME_MAX] = {0};
+	read_file_content("/etc/hostname", hostname, HOST_NAME_MAX);
+	sethostname(hostname, HOST_NAME_MAX);
+}
 
 int main(void)
 {
@@ -32,6 +40,8 @@ int main(void)
 	dlog(info, "mounting fstab");
 	
 	spawn(mountcmd);
+
+	set_hostname();
 
 	dlog(info, "starting agetty");
 	
