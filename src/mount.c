@@ -1,4 +1,6 @@
+#include <stdio.h>
 #include <sys/mount.h>
+#include <sys/stat.h>
 #include "util.h"
 
 void safe_mount(char *s, char *t, char *f, unsigned long m, void *d)
@@ -15,7 +17,7 @@ void safe_mount(char *s, char *t, char *f, unsigned long m, void *d)
 
 void mount_tfs()
 {
-	uint64_t prsflags = MS_SYNCHRONOUS | MS_NOSUID | MS_NOEXEC;
+	unsigned long prsflags = MS_SYNCHRONOUS | MS_NOSUID | MS_NOEXEC;
 
 	mkdir("/proc", S_IFDIR);
 	safe_mount("/proc", "/proc", "proc", prsflags, "");
