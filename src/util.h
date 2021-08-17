@@ -9,11 +9,11 @@ enum dlog_levels
 	warn,
 };
 
-char *read_file_content(char *file, char *ptr, int len);
+char *read_file_content(int fd, char *ptr, int len);
 void open_stds();
 void spawn(char *const []);
+void set_hostname();
 void dlog(int, const char *, ...);
-
 void mount_tfs();
 
 #endif

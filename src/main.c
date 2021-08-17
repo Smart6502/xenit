@@ -1,4 +1,3 @@
-#include <limits.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -7,19 +6,6 @@
 
 char *const mountcmd[] = { "mount", "-av", NULL };
 char *const getty[] = { "/sbin/agetty", "--noclear", "tty1", NULL };
-
-void set_hostname()
-{
-	char hostname[HOST_NAME_MAX] = {0};
-	read_file_content("/etc/hostname", hostname, HOST_NAME_MAX);
-
-	dlog(info, "setting hostname %s", hostname);
-
-	if (sethostname(hostname, HOST_NAME_MAX))
-		dlog(fail, "could not set hostname");
-	else
-		dlog(ok, "set hostname");
-}
 
 int main(void)
 {
