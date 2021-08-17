@@ -12,7 +12,13 @@ void set_hostname()
 {
 	char hostname[HOST_NAME_MAX] = {0};
 	read_file_content("/etc/hostname", hostname, HOST_NAME_MAX);
-	sethostname(hostname, HOST_NAME_MAX);
+
+	dlog(info, "setting hostname %s", hostname);
+
+	if (sethostname(hostname, HOST_NAME_MAX))
+		dlog(fail, "could not set hostname");
+	else
+		dlog(ok, "set hostname");
 }
 
 int main(void)
