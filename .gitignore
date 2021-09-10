@@ -1,2 +1,7 @@
 *.o
 xenit
+
+
+# Added by cargo
+
+/target
